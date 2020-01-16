@@ -44,12 +44,19 @@ def main():
         ('g', 'get', None, None),
         ('d', 'describe', None, None),
         ('rm', 'delete', None, None),
+        ('e', 'edit', None, None),
         ('run', 'run --rm --restart=Never --image-pull-policy=IfNotPresent -i -t', None, None),
         ]
 
     res = [
         ('po', 'pods', ['g', 'd', 'rm'], None),
         ('dep', 'deployment', ['g', 'd', 'rm'], None),
+        ('st', 'statefulset', ['g', 'd', 'rm'], None),
+        ('ds', 'daemonset', ['g', 'd', 'rm'], None),
+        ('hr', 'helmrelease', ['g', 'd', 'rm'], None),
+        ('gw', 'gateway', ['g', 'd', 'rm'], None),
+        ('vs', 'virtualservice', ['g', 'd', 'rm'], None),
+        ('dr', 'destinationrules', ['g', 'd', 'rm'], None),
         ('svc', 'service', ['g', 'd', 'rm'], None),
         ('ing', 'ingress', ['g', 'd', 'rm'], None),
         ('cm', 'configmap', ['g', 'd', 'rm'], None),
