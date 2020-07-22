@@ -28,7 +28,10 @@ except NameError:
 
 def main():
     # (alias, full, allow_when_oneof, incompatible_with)
-    cmds = [('k', 'kubectl', None, None)]
+    cmds = [
+        ('k', 'kubectl', None, None),
+        ('wk', 'watch kubectl', ['g'], None)
+    ]
 
     globs = [('sys', '--namespace=kube-system', None, ['sys'])]
 
@@ -54,6 +57,7 @@ def main():
         ('st', 'statefulset', ['g', 'd', 'rm'], None),
         ('ds', 'daemonset', ['g', 'd', 'rm'], None),
         ('hr', 'helmrelease', ['g', 'd', 'rm'], None),
+        ('ss', 'sealedsecret', ['g', 'd', 'rm'], None),
         ('gw', 'gateway', ['g', 'd', 'rm'], None),
         ('vs', 'virtualservice', ['g', 'd', 'rm'], None),
         ('dr', 'destinationrules', ['g', 'd', 'rm'], None),
@@ -75,7 +79,7 @@ def main():
         ('sl', '--show-labels', ['g'], ['oyaml', 'ojson']
          + diff(res_types, ['po', 'dep'])),
         ('all', '--all', ['rm'], None), # caution: reusing the alias
-        ('w', '--watch', ['g'], ['oyaml', 'ojson', 'owide']),
+        # ('w', '--watch', ['g'], ['oyaml', 'ojson', 'owide']),
         ]
 
     # these accept a value, so they need to be at the end and
