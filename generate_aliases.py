@@ -29,26 +29,29 @@ except NameError:
 def main():
     # (alias, full, allow_when_oneof, incompatible_with)
     cmds = [
-        ('k', 'kubectl', None, None),
-        ('wk', 'watch kubectl', ['g'], None)
+        ('k', 'kubectl', None, 'wk'),
+        ('wk', 'watch kubectl', None, ['k', 'oyaml', 'ojson', 'owide'])
     ]
 
-    globs = [('sys', '--namespace=kube-system', None, ['sys'])]
+    globs = [
+        ('sys', '--namespace=kube-system', None, ['sys', 'm']),
+        ('m', '--namespace=management', None, ['m', 'sys'])
+    ]
 
     ops = [
-        ('a', 'apply --recursive -f', None, None),
-        ('ak', 'apply -k', None, ['sys']),
-        ('k', 'kustomize', None, ['sys']),
-        ('ex', 'exec -i -t', None, None),
-        ('lo', 'logs -f', None, None),
-        ('lop', 'logs -f -p', None, None),
-        ('p', 'proxy', None, ['sys']),
-        ('pf', 'port-forward', None, ['sys']),
+        ('a', 'apply --recursive -f', None, ['wk']),
+        ('ak', 'apply -k', None, ['sys', 'wk']),
+        ('k', 'kustomize', None, ['sys', 'wk']),
+        ('ex', 'exec -i -t', None, ['wk']),
+        ('lo', 'logs -f', None, ['wk']),
+        ('lop', 'logs -f -p', None, ['wk']),
+        ('p', 'proxy', None, ['sys','wk']),
+        ('pf', 'port-forward', None, ['sys','wk']),
         ('g', 'get', None, None),
-        ('d', 'describe', None, None),
-        ('rm', 'delete', None, None),
-        ('e', 'edit', None, None),
-        ('run', 'run --rm --restart=Never --image-pull-policy=IfNotPresent -i -t', None, None),
+        ('d', 'describe', None, ['wk']),
+        ('rm', 'delete', None, ['wk']),
+        ('e', 'edit', None, ['wk']),
+        ('run', 'run --rm --restart=Never --image-pull-policy=IfNotPresent -i -t', None, ['wk']),
         ]
 
     res = [
@@ -65,8 +68,10 @@ def main():
         ('ing', 'ingress', ['g', 'd', 'rm'], None),
         ('cm', 'configmap', ['g', 'd', 'rm'], None),
         ('sec', 'secret', ['g', 'd', 'rm'], None),
-        ('no', 'nodes', ['g', 'd'], ['sys']),
-        ('ns', 'namespaces', ['g', 'd', 'rm'], ['sys']),
+        ('pvc', 'persistentvolumeclaim', ['g', 'd', 'rm'], None),
+        ('pv', 'persistentvolume', ['g', 'd', 'rm'], ['sys', 'm']),
+        ('no', 'nodes', ['g', 'd'], ['sys', 'm']),
+        ('ns', 'namespaces', ['g', 'd', 'rm'], ['sys', 'm']),
         ]
     res_types = [r[0] for r in res]
 
