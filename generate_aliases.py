@@ -40,13 +40,13 @@ def main():
 
     ops = [
         ('a', 'apply --recursive -f', None, ['wk']),
-        ('ak', 'apply -k', None, ['sys', 'wk']),
-        ('k', 'kustomize', None, ['sys', 'wk']),
+        ('ak', 'apply -k', None, ['sys', 'm', 'wk']),
+        ('k', 'kustomize', None, ['sys', 'm', 'wk']),
         ('ex', 'exec -i -t', None, ['wk']),
         ('lo', 'logs -f', None, ['wk']),
         ('lop', 'logs -f -p', None, ['wk']),
-        ('p', 'proxy', None, ['sys','wk']),
-        ('pf', 'port-forward', None, ['sys','wk']),
+        ('p', 'proxy', None, ['sys', 'm','wk']),
+        ('pf', 'port-forward', None, ['sys', 'm','wk']),
         ('g', 'get', None, None),
         ('d', 'describe', None, ['wk']),
         ('rm', 'delete', None, ['wk']),
@@ -79,10 +79,8 @@ def main():
         ('oyaml', '-o=yaml', ['g'], ['owide', 'ojson', 'sl']),
         ('owide', '-o=wide', ['g'], ['oyaml', 'ojson']),
         ('ojson', '-o=json', ['g'], ['owide', 'oyaml', 'sl']),
-        ('all', '--all-namespaces', ['g', 'd'], ['rm', 'f', 'no', 'sys'
-         ]),
-        ('sl', '--show-labels', ['g'], ['oyaml', 'ojson']
-         + diff(res_types, ['po', 'dep'])),
+        ('all', '--all-namespaces', ['g', 'd'], ['rm', 'f', 'no', 'sys', 'm']),
+        ('sl', '--show-labels', ['g'], ['oyaml', 'ojson'] + diff(res_types, ['po', 'dep'])),
         ('all', '--all', ['rm'], None), # caution: reusing the alias
         # ('w', '--watch', ['g'], ['oyaml', 'ojson', 'owide']),
         ]
@@ -90,9 +88,10 @@ def main():
     # these accept a value, so they need to be at the end and
     # mutually exclusive within each other.
     positional_args = [('f', '--recursive -f', ['g', 'd', 'rm'], res_types + ['all'
-                       , 'l', 'sys']), ('l', '-l', ['g', 'd', 'rm'], ['f',
-                       'all']), ('n', '--namespace', ['g', 'd', 'rm',
-                       'lo', 'ex', 'pf'], ['ns', 'no', 'sys', 'all'])]
+        , 'l', 'sys', 'm']), ('l', '-l', ['g', 'd', 'rm'], ['f',
+        'all']), ('n', '--namespace', ['g', 'd', 'rm',
+        'lo', 'ex', 'pf'], ['ns', 'no', 'sys', 'm', 'all'])
+    ]
 
     # [(part, optional, take_exactly_one)]
     parts = [
@@ -110,13 +109,11 @@ def main():
     # prepare output
     if not sys.stdout.isatty():
         header_path = \
-            os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                         'license_header')
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), 'license_header')
         with open(header_path, 'r') as f:
             print(f.read())
     for cmd in out:
-        print("alias {}='{}'".format(''.join([a[0] for a in cmd]),
-              ' '.join([a[1] for a in cmd])))
+        print("alias {}='{}'".format(''.join([a[0] for a in cmd]), ' '.join([a[1] for a in cmd])))
 
 
 def gen(parts):
@@ -197,6 +194,3 @@ def diff(a, b):
 
 if __name__ == '__main__':
     main()
-
-
-			
