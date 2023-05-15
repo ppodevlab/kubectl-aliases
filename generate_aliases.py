@@ -29,8 +29,8 @@ except NameError:
 def main():
     # (alias, full, allow_when_oneof, incompatible_with)
     cmds = [
-        ('k', 'kubectl', None, 'wk'),
-        ('wk', 'watch kubectl', None, ['k', 'oyaml', 'ojson', 'owide'])
+        ('k', 'kubectl', None, ['wk']),
+        ('wk', 'watch kubectl', None, ['k', 'oyaml', 'ojson', 'owide']),
     ]
 
     globs = [
@@ -52,18 +52,13 @@ def main():
         ('rm', 'delete', None, ['wk']),
         ('e', 'edit', None, ['wk']),
         ('run', 'run --rm --restart=Never --image-pull-policy=IfNotPresent -i -t', None, ['wk']),
-        ]
+    ]
 
     res = [
         ('po', 'pods', ['g', 'd', 'rm'], None),
         ('dep', 'deployment', ['g', 'd', 'rm'], None),
         ('st', 'statefulset', ['g', 'd', 'rm'], None),
         ('ds', 'daemonset', ['g', 'd', 'rm'], None),
-        ('hr', 'helmrelease', ['g', 'd', 'rm'], None),
-        ('ss', 'sealedsecret', ['g', 'd', 'rm'], None),
-        ('gw', 'gateway', ['g', 'd', 'rm'], None),
-        ('vs', 'virtualservice', ['g', 'd', 'rm'], None),
-        ('dr', 'destinationrules', ['g', 'd', 'rm'], None),
         ('svc', 'service', ['g', 'd', 'rm'], None),
         ('ing', 'ingress', ['g', 'd', 'rm'], None),
         ('cm', 'configmap', ['g', 'd', 'rm'], None),
@@ -72,25 +67,32 @@ def main():
         ('pv', 'persistentvolume', ['g', 'd', 'rm'], ['sys', 'm']),
         ('no', 'nodes', ['g', 'd'], ['sys', 'm']),
         ('ns', 'namespaces', ['g', 'd', 'rm'], ['sys', 'm']),
-        ]
+        ('gr', 'gitrepository', ['g', 'd', 'rm'], None),
+        ('h', 'helmrepository', ['g', 'd', 'rm'], None),
+        ('hr', 'helmrelease', ['g', 'd', 'rm', 'r', 're', 's'], None),
+        ('k', 'kustomization', ['g', 'd', 'rm', 'r', 're', 's'], None),
+        ('ss', 'secretstore', ['g', 'd', 'rm'], None),
+        ('es', 'externalsecret', ['g', 'd', 'rm'], None),
+        ('ces', 'clusterexternalsecret', ['g', 'd', 'rm'], ['sys', 'm']),
+        ('css', 'clustersecretstore', ['g', 'd', 'rm'], ['sys', 'm']),
+    ]
     res_types = [r[0] for r in res]
 
     args = [
         ('oyaml', '-o=yaml', ['g'], ['owide', 'ojson', 'sl']),
         ('owide', '-o=wide', ['g'], ['oyaml', 'ojson']),
         ('ojson', '-o=json', ['g'], ['owide', 'oyaml', 'sl']),
-        ('all', '--all-namespaces', ['g', 'd'], ['rm', 'f', 'no', 'sys', 'm']),
+        ('all', '--all-namespaces', ['g', 'd'], ['rm', 'no', 'sys']),
         ('sl', '--show-labels', ['g'], ['oyaml', 'ojson'] + diff(res_types, ['po', 'dep'])),
         ('all', '--all', ['rm'], None), # caution: reusing the alias
-        # ('w', '--watch', ['g'], ['oyaml', 'ojson', 'owide']),
         ]
 
     # these accept a value, so they need to be at the end and
     # mutually exclusive within each other.
-    positional_args = [('f', '--recursive -f', ['g', 'd', 'rm'], res_types + ['all'
-        , 'l', 'sys', 'm']), ('l', '-l', ['g', 'd', 'rm'], ['f',
-        'all']), ('n', '--namespace', ['g', 'd', 'rm',
-        'lo', 'ex', 'pf'], ['ns', 'no', 'sys', 'm', 'all'])
+    positional_args = [
+        ('f', '--recursive -f', ['g', 'd', 'rm'], res_types + ['all', 'l', 'sys', 'm']),
+        ('l', '-l', ['g', 'd', 'rm'], ['all']),
+        ('n', '--namespace', ['g', 'd', 'rm','lo', 'ex', 'pf'], ['ns', 'no', 'sys', 'm', 'all', 'ces', 'css'])
     ]
 
     # [(part, optional, take_exactly_one)]
